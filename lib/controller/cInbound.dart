@@ -1,12 +1,16 @@
 import 'package:crewdible_b2b/model/mListInbound.dart';
 import 'package:crewdible_b2b/source/sInbound.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../model/mInbound.dart';
 import '../model/mInboundDetail.dart';
 
 class CInbound extends GetxController {
   ListInboundDetail? inboundDetail = null;
+  var isLoading = false.obs;
+
   final RxBool _loading = false.obs;
   bool get loading => _loading.value;
   set loading(bool newData) {
@@ -41,8 +45,6 @@ class CInbound extends GetxController {
     super.onInit();
   }
 
-  static void clear() {}
-
   void onItemCheck(ListDetailItem picking, bool? value) {
     if (inboundDetail == null) return;
 
@@ -62,4 +64,13 @@ class CInbound extends GetxController {
       }
     }
   }
+
+  void uploadData() async {
+    isLoading.value = true;
+    await Future.delayed(Duration(seconds: 4));
+    isLoading.value = false;
+  }
+
+  // final now = new DateTime.now();
+  var date = DateFormat().add_yMd().add_Hms().format(DateTime.now()).obs;
 }

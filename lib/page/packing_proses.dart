@@ -37,16 +37,22 @@ class _PackingProsesState extends State<PackingProses> {
 
   Future getImage() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image = File(imageFile!.path);
     setState(() {});
   }
 
   Future getImage1() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image1 = File(imageFile!.path);
     setState(() {});
   }
@@ -79,7 +85,10 @@ class _PackingProsesState extends State<PackingProses> {
           context: context,
           type: CoolAlertType.success,
           text: 'Berhasil packing',
-        ).then(((value) => Get.to(() => PackingPage())));
+        ).then((value) {
+          Get.off(() => PackingPage());
+          setState(() {});
+        });
       } else {
         CoolAlert.show(
           context: context,

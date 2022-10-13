@@ -35,7 +35,6 @@ class _PickingProsesState extends State<PickingProses> {
   @override
   void initState() {
     cPickingList.setData(widget.idBasket ?? '');
-
     super.initState();
   }
 
@@ -200,7 +199,7 @@ class _PickingProsesState extends State<PickingProses> {
               if (controllerQty.text == '') {
                 DInfo.toastError("Quantity don't empty");
               } else {
-                Get.reloadAll();
+                Get.back(result: true);
               }
             },
             child: const Text('Yes'),
@@ -225,7 +224,11 @@ class _PickingProsesState extends State<PickingProses> {
           context: context,
           type: CoolAlertType.success,
           text: 'Berhasil picking',
-        ).then((value) => Get.reloadAll());
+          barrierDismissible: false,
+        ).then((value) {
+          Get.off(() => PickingProses(idBasket: widget.idBasket));
+          setState(() {});
+        });
       } else {
         CoolAlert.show(
           context: context,

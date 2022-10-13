@@ -52,16 +52,22 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
 
   Future getImage() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image = File(imageFile!.path);
     setState(() {});
   }
 
   Future getImage1() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image1 = File(imageFile!.path);
     setState(() {});
   }
@@ -73,12 +79,21 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     // DateTime dateToday = new DateTime.now();
     // ConnectionState.waiting =
     // String date = DateFormat().add_yMd().add_jms().format(now); // 2021-06-24
-    String date = DateFormat().add_yMd().add_Hms().format(now); // 2021-06-24
+    String date = DateFormat("YYYY-M-d").format(now); // 2021-06-24
     cInbound.setData(widget.nopo ?? '');
     controllerPo.text = cInbound.data.nopo ?? '';
     controllerTglDatang.text = date;
     controllerQty.text = cInbound.data.qty ?? '';
-    const CircularProgressIndicator();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    controllerDriver.dispose();
+    controllerPo.dispose();
+    controllerPlatNo.dispose();
+    controllerQty.dispose();
+    super.dispose();
   }
 
   @override
@@ -118,13 +133,17 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              controller: controllerQty,
-              decoration: const InputDecoration(
-                labelText: 'Quantity',
-                enabled: false,
-              ),
-            ),
+            child: GetBuilder<CInbound>(
+                init: CInbound(),
+                builder: (controller) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Total Quantity"),
+                        DView.spaceHeight(10),
+                        Text("${cInbound.data.qty}",
+                            style: TextStyle(fontSize: 16)),
+                      ],
+                    )),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -291,7 +310,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
       ),
       barrierDismissible: false,
     );
-
+    bool loadingData = false;
     if (yes ?? false) {
       final uri =
           Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiInbound/updatePo");
@@ -312,7 +331,10 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           context: context,
           type: CoolAlertType.success,
           text: 'Berhasil Inbound',
-        ).then((value) => Get.off(() => InboundPage()));
+        ).then((value) {
+          Get.off(() => InboundPage());
+          setState(() {});
+        });
       } else {
         CoolAlert.show(
           context: context,

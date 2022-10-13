@@ -139,7 +139,7 @@ class _PackingPageState extends State<PackingPage> {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    Get.to(() => PackingProses(
+                                    Get.off(() => PackingProses(
                                           orderId: packing.orderId ?? '',
                                         ));
                                   },

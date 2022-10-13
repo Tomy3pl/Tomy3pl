@@ -83,7 +83,7 @@ class _ListHandoverState extends State<ListHandover> {
       if (_image == null) {
         AnimatedSnackBar.rectangle(
           'Error',
-          'Gagal submit packing',
+          'Gagal submit handover',
           type: AnimatedSnackBarType.error,
           brightness: Brightness.dark,
         ).show(context);
@@ -92,13 +92,16 @@ class _ListHandoverState extends State<ListHandover> {
         CoolAlert.show(
           context: context,
           type: CoolAlertType.success,
-          text: 'Berhasil packing',
-        ).then(((value) => Get.to(() => HandoverPage())));
+          text: 'Berhasil handover',
+        );Get.off(() => HandoverPage());
+        setState(() {
+          
+        });
       } else {
         CoolAlert.show(
           context: context,
           type: CoolAlertType.error,
-          text: 'Gagal packing',
+          text: 'Gagal Handover',
         );
       }
     }
@@ -106,10 +109,7 @@ class _ListHandoverState extends State<ListHandover> {
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2));
     cHandover.setData(widget.idHandover);
-    CircularProgressIndicator;
-    setState(() {});
     super.initState();
   }
 

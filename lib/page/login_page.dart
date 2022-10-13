@@ -40,9 +40,7 @@ class _LoginPageState extends State<LoginPage> {
           DInfo.closeDialog(actionAfterClose: () {
             DMethod.printTitle('Level User', cUser.data.level ?? '');
             DView.loadingCircle();
-            Get.to(() => const DashboardPage(),
-                transition: Transition.leftToRightWithFade,
-                duration: const Duration(seconds: 1));
+            Get.to(() => const DashboardPage());
           });
           // ignore: use_build_context_synchronously
           AnimatedSnackBar.rectangle(

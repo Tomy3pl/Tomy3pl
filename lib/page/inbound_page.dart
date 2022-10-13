@@ -129,8 +129,10 @@ class _InboundPageState extends State<InboundPage> {
                                 list.status == '0'
                                     ? IconButton(
                                         onPressed: () {
-                                          Get.to(() => ReceiveInboundPage(
-                                              nopo: list.noPo));
+                                          setState(() {
+                                            Get.to(() => ReceiveInboundPage(
+                                                nopo: list.noPo));
+                                          });
                                         },
                                         icon: Icon(
                                             Icons.add_shopping_cart_rounded),

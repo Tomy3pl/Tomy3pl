@@ -33,7 +33,6 @@ class CPickingList extends GetxController {
     // });
   }
 
-  String? idBasket;
   @override
   void onInit() {
     getList();

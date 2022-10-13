@@ -5,6 +5,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:crewdible_b2b/config/app_color.dart';
 import 'package:crewdible_b2b/controller/cInbound.dart';
 import 'package:crewdible_b2b/model/mInboundDetail.dart';
+import 'package:crewdible_b2b/page/inbound_page.dart';
 import 'package:crewdible_b2b/page/inbound_received.dart';
 import 'package:d_info/d_info.dart';
 import 'package:d_input/d_input.dart';
@@ -39,8 +40,10 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
   void initState() {
     super.initState();
     cInbound.setData(widget.nopo ?? '');
+    setState(() {});
   }
 
+  bool loadingData = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,33 +55,30 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
           style: TextStyle(fontSize: 16),
         ),
         actions: [
-          IconButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 12)),
+            child: loadingData
+                ? CircularProgressIndicator(color: Colors.black)
+                : Text('Selesai'),
             onPressed: () async {
-              bool? yes = await DInfo.dialogConfirmation(
-                context,
-                'Confirmation Add',
-                'Yes to confirm',
-              );
-              if (yes ?? false) {
-                cInbound.inboundDetail?.listItem?.forEach((element) async {
-                  final uri = Uri.parse(
-                      "https://wms-b2b.dev.crewdible.co.id/ApiInbound/update");
-                  var request = http.MultipartRequest('POST', uri);
-                  request.fields['id'] = element.id;
-                  request.fields['quantity'] = element.qtyGet;
-                  var response = await request.send();
-                  print(response);
-                  print(
-                      "${response.statusCode} ${element.id} ${element.qtyGet}");
-                });
-                Get.off(() => InboundReceivedPage(nopo: widget.nopo));
-                // cInbound.inboundDetail?.listItem?.forEach((element) {
-                //   print("${element.itemDetail} ${element.selected}");
-                // });
-              }
+              if (loadingData) return;
+              setState(() => loadingData = true);
+              cInbound.inboundDetail?.listItem?.forEach((element) async {
+                final uri = Uri.parse(
+                    "https://wms-b2b.dev.crewdible.co.id/ApiInbound/update");
+                var request = http.MultipartRequest('POST', uri);
+                request.fields['id'] = element.id;
+                request.fields['quantity'] = element.qtyGet;
+                var response = await request.send();
+                print(response);
+                print("${response.statusCode} ${element.id} ${element.qtyGet}");
+              });
+              await Future.delayed(const Duration(seconds: 5));
+              Get.off(() => InboundReceivedPage(nopo: widget.nopo));
+              setState(() => loadingData = false);
             },
-            icon: const Icon(Icons.check),
-          ),
+          )
         ],
       ),
       body: RefreshIndicator(
@@ -91,6 +91,7 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
                 DView.spaceHeight(10),
                 GetBuilder<CInbound>(builder: (_) {
                   if (cInbound.data.nopo == null) return DView.loadingBar();
+                  if (cInbound.isLoading.isTrue) return DView.loadingBar();
                   print(cInbound.data.listItem);
                   List<ListDetailItem> list = cInbound.data.listItem!;
                   if (list.isEmpty) return DView.empty();
@@ -121,66 +122,61 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
                             shadowColor: Colors.black,
                             margin: EdgeInsets.symmetric(vertical: 5),
                             color: Colors.white.withOpacity(0.9),
-                            child: InkWell(
-                              onTap: () {
-                                submite(picking.id);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(19.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            picking.itemId!,
-                                            textAlign: TextAlign.left,
+                            child: Padding(
+                              padding: const EdgeInsets.all(19.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          picking.itemId!,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Container(
+                                          width: 270,
+                                          child: Text(
+                                            picking.itemDetail!,
+                                            textAlign: TextAlign.justify,
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Container(
-                                            width: 270,
-                                            child: Text(
-                                              picking.itemDetail!,
-                                              textAlign: TextAlign.justify,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            picking.qty!,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          picking.qty!,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Checkbox(
-                                        value: picking.selected,
-                                        onChanged: (value) {
-                                          cInbound.onItemCheck(picking, value);
-                                          setState(() {
-                                            picking.selected = value ?? false;
-                                          });
-                                        })
-                                  ],
-                                ),
+                                  ),
+                                  Checkbox(
+                                      value: picking.selected,
+                                      onChanged: (value) {
+                                        cInbound.onItemCheck(picking, value);
+                                        setState(() {
+                                          picking.selected = value ?? false;
+                                        });
+                                      })
+                                ],
                               ),
                             ),
                           ),
@@ -248,7 +244,10 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
           context: context,
           type: CoolAlertType.success,
           text: 'Berhasil',
-        ).then((value) => Get.to(ReceiveInboundPage(nopo: '${widget.nopo}')));
+        ).then((value) {
+          Get.off(ReceiveInboundPage(nopo: '${widget.nopo}'));
+          setState(() {});
+        });
       } else {
         CoolAlert.show(
           context: context,
