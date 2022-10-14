@@ -295,7 +295,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     // color: Colors.amber,
                                     child: InkWell(
                                       onTap: () {
-                                        Get.off(() => HandoverPage());
+                                        Get.to(() => HandoverPage());
                                       },
                                       splashColor: Colors.green,
                                       child: Center(

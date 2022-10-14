@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:crewdible_b2b/model/mListHandover.dart';
+
 class Handover {
   Handover({
     this.idHandover,
@@ -7,34 +11,35 @@ class Handover {
     this.tandatangan,
     this.status,
     this.warehouse,
-    this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
   });
 
   String? idHandover;
-  String? listItem;
+  List<ListHandoverItem>? listItem;
   String? driver;
   String? foto;
   String? tandatangan;
   String? status;
   String? warehouse;
-  String? createdAt;
-  String? updatedAt;
-  String? deletedAt;
 
-  factory Handover.fromJson(Map<String, dynamic> json) => Handover(
-        idHandover: json["id_handover"],
-        listItem: json["listItem"],
-        driver: json["driver"],
-        foto: json["foto"],
-        tandatangan: json["tandatangan"],
-        status: json["status"],
-        warehouse: json["warehouse"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        deletedAt: json["deleted_at"],
-      );
+  factory Handover.fromJson(Map<String, dynamic> json) {
+    Handover result = Handover();
+    result.idHandover = json["id_handover"];
+    result.driver = json["driver"];
+    result.foto = json["foto"];
+    result.tandatangan = json["tandatangan"];
+    result.status = json["status"];
+    result.warehouse = json["warehouse"];
+    try {
+      List tmpItem = jsonDecode(json["listItem"]);
+      List<ListHandoverItem> list = [];
+      tmpItem.forEach((e) => list.add(ListHandoverItem.fromJson(e)));
+      result.listItem = list;
+    } catch (e) {
+      result.listItem = [];
+      print(e);
+    }
+    return result;
+  }
 
   Map<String, dynamic> toJson() => {
         "id_handover": idHandover,
@@ -44,20 +49,5 @@ class Handover {
         "tandatangan": tandatangan,
         "status": status,
         "warehouse": warehouse,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "deleted_at": deletedAt,
       };
-}
-
-class Todo {
-  String? text;
-  bool done;
-
-  Todo({this.text, this.done = false});
-
-  factory Todo.fromJson(Map<String, dynamic> json) =>
-      Todo(text: json['text'], done: json['done']);
-
-  Map<String, dynamic> toJson() => {'text': text, 'done': done};
 }

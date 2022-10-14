@@ -22,6 +22,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 import '../config/app_color.dart';
+import '../model/mListHandover.dart';
 
 class ListHandover extends StatefulWidget {
   ListHandover({Key? key, required this.idHandover}) : super(key: key);
@@ -93,10 +94,9 @@ class _ListHandoverState extends State<ListHandover> {
           context: context,
           type: CoolAlertType.success,
           text: 'Berhasil handover',
-        );Get.off(() => HandoverPage());
-        setState(() {
-          
-        });
+        );
+        Get.off(() => HandoverPage());
+        setState(() {});
       } else {
         CoolAlert.show(
           context: context,
@@ -129,9 +129,10 @@ class _ListHandoverState extends State<ListHandover> {
               children: [
                 DView.spaceHeight(10),
                 GetBuilder<CHandover>(builder: (_) {
-                  if (cHandover.data.idHandover == null) return DView.empty();
-                  List list = jsonDecode(cHandover.data.listItem!);
-                  if (list.isEmpty) return DView.empty();
+                  if (cHandover.data.idHandover == null)
+                    return DView.loadingBar();
+                  if (cHandover.list.isEmpty) return DView.empty();
+                  List<ListHandoverItem> list = cHandover.data.listItem!;
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -145,7 +146,7 @@ class _ListHandoverState extends State<ListHandover> {
                       );
                     },
                     itemBuilder: (context, index) {
-                      Map handover = list[index];
+                      ListHandoverItem handover = list[index];
                       return Column(
                         children: [
                           Card(
@@ -156,48 +157,42 @@ class _ListHandoverState extends State<ListHandover> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          cHandover.data.driver ?? '',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                        DView.spaceHeight(10),
-                                        Text(
-                                          handover['Item_id'],
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                        DView.spaceHeight(10),
-                                        Text(
-                                          handover['Item_detail'],
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 16),
+                                      Text(
+                                        cHandover.data.driver ?? '',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      DView.spaceHeight(10),
+                                      Text(
+                                        handover.orderId!,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      DView.spaceHeight(10),
+                                      Text(
+                                        handover.namaPenerima!,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      DView.spaceHeight(10),
+                                      Container(
+                                        width: 270,
                                         child: Text(
-                                          handover['quantity'],
+                                          handover.alamat!,
+                                          textAlign: TextAlign.justify,
                                           style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ),

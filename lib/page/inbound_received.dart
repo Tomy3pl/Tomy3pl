@@ -79,7 +79,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     // DateTime dateToday = new DateTime.now();
     // ConnectionState.waiting =
     // String date = DateFormat().add_yMd().add_jms().format(now); // 2021-06-24
-    String date = DateFormat("YYYY-M-d").format(now); // 2021-06-24
+    String date = DateFormat("yyyy-M-d H:mm:dd").format(now); // 2021-06-24
     cInbound.setData(widget.nopo ?? '');
     controllerPo.text = cInbound.data.nopo ?? '';
     controllerTglDatang.text = date;
