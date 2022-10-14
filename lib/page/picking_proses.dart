@@ -227,6 +227,7 @@ class _PickingProsesState extends State<PickingProses> {
           barrierDismissible: false,
         ).then((value) {
           Get.off(() => PickingProses(idBasket: widget.idBasket));
+          cPickingList.getList();
           setState(() {});
         });
       } else {

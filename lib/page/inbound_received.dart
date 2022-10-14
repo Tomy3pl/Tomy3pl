@@ -268,9 +268,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () async {
-                submite();
-              },
+              onPressed: () => submite(),
               child: Text('Submit'),
             ),
           ),
@@ -333,6 +331,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           text: 'Berhasil Inbound',
         ).then((value) {
           Get.off(() => InboundPage());
+          cInbound.getList();
           setState(() {});
         });
       } else {
