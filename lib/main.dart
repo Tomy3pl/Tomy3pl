@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: Obx(() {
-        if (cUser.data.idUser == null) return const LoginPage();
+        if (cUser.data.idUser == null) return const IntroPage();
+        if (cUser.data.level == 'picker') return const DashboardPage();
         return const DashboardPage();
       }),
     );

@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import '../../config/app_color.dart';
 import '../source/sUser.dart';
+import 'dashboard_packer_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -34,21 +35,38 @@ class _LoginPageState extends State<LoginPage> {
         controllerEmail.text,
         controllerPassword.text,
       );
-
       if (GetUtils.isEmail(controllerEmail.text)) {
         if (success) {
           DInfo.closeDialog(actionAfterClose: () {
             DMethod.printTitle('Level User', cUser.data.level ?? '');
-            DView.loadingCircle();
-            Get.to(() => const DashboardPage());
+            if (cUser.data.level == 'picker') {
+              AnimatedSnackBar.rectangle(
+                'Success',
+                '${cUser.data.namaUser ?? ''} Berhasil login !',
+                type: AnimatedSnackBarType.success,
+                brightness: Brightness.dark,
+              ).show(context);
+              Get.off(() => const DashboardPickerPage());
+            } else if (cUser.data.level == 'packer') {
+              // ignore: use_build_context_synchronously
+              AnimatedSnackBar.rectangle(
+                'Success',
+                '${cUser.data.namaUser ?? ''} Berhasil login !',
+                type: AnimatedSnackBarType.success,
+                brightness: Brightness.dark,
+              ).show(context);
+              Get.off(() => PackerDashboard());
+            } else {
+              // ignore: use_build_context_synchronously
+              AnimatedSnackBar.rectangle(
+                'Success',
+                '${cUser.data.namaUser ?? ''} Berhasil login !',
+                type: AnimatedSnackBarType.success,
+                brightness: Brightness.dark,
+              ).show(context);
+              Get.off(() => const DashboardPage());
+            }
           });
-          // ignore: use_build_context_synchronously
-          AnimatedSnackBar.rectangle(
-            'Success',
-            '${cUser.data.namaUser ?? ''} Berhasil login !',
-            type: AnimatedSnackBarType.success,
-            brightness: Brightness.dark,
-          ).show(context);
         } else {
           // ignore: use_build_context_synchronously
           AnimatedSnackBar.rectangle(

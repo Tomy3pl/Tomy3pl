@@ -1,10 +1,11 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:crewdible_b2b/page/packing_proses.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../config/app_color.dart';
 import '../controller/cPacking.dart';
 import '../model/mPacking.dart';
@@ -28,26 +29,6 @@ class _PackingPageState extends State<PackingPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-    if (mounted) {
-      Get.to(() => PackingProses(orderId: _scanBarcode));
-    } else {
-      return;
-    }
-
-    setState(() {
-      _scanBarcode = barcodeScanRes;
-    });
   }
 
   @override
@@ -161,6 +142,37 @@ class _PackingPageState extends State<PackingPage> {
     );
   }
 
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      // ignore: use_build_context_synchronously
+      AnimatedSnackBar.rectangle(
+        'Order_id tidak ada',
+        'Gagal',
+        type: AnimatedSnackBarType.error,
+        brightness: Brightness.dark,
+      ).show(context);
+    } else {
+      Get.off(PackingProses(orderId: _scanBarcode));
+    }
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
   Expanded search() {
     return Expanded(
       child: Container(
@@ -179,7 +191,9 @@ class _PackingPageState extends State<PackingPage> {
             fillColor: Colors.grey[300],
             hintText: 'Search...',
             suffixIcon: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                scanQR();
+              },
               icon: const Icon(
                 Icons.search,
                 color: Colors.black,

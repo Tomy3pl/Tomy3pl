@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:crewdible_b2b/controller/cAddDriver.dart';
@@ -20,7 +19,8 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
+import 'package:signature/signature.dart';
+import 'package:path_provider/path_provider.dart';
 import '../config/app_color.dart';
 import '../model/mListHandover.dart';
 
@@ -36,6 +36,17 @@ class _ListHandoverState extends State<ListHandover> {
   final cHandover = Get.put(CHandover());
   final cUser = Get.put(CUser());
   final picker = ImagePicker();
+
+  final SignatureController _controller = SignatureController(
+    penStrokeWidth: 2,
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.white,
+    exportPenColor: Colors.black,
+    onDrawStart: () => print('onDrawStart called!'),
+    onDrawEnd: () => print('onDrawEnd called!'),
+  );
+
+  Uint8List? exportImage;
 
   File? _image;
   File? _image1;
@@ -66,37 +77,51 @@ class _ListHandoverState extends State<ListHandover> {
 
   Future submite() async {
     bool? yes = await DInfo.dialogConfirmation(
-        context, 'Packing Product', 'Apakah proses packing sudah selesai ?');
+        context, 'HandOver', 'Apakah proses handover sudah selesai ?');
+    final uri =
+        Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiManifest/update");
+
     if (yes ?? false) {
-      final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiManifest/update");
+      if (_image == null) {
+        AnimatedSnackBar.rectangle(
+          'gambar tidak boleh kosong',
+          'Gagal submit handover',
+          type: AnimatedSnackBarType.error,
+          brightness: Brightness.dark,
+        ).show(context);
+        return;
+      }
+      if (dataRender == null) {
+        AnimatedSnackBar.rectangle(
+          'tanda tangan tidak boleh kosong',
+          'Gagal submit handover',
+          type: AnimatedSnackBarType.error,
+          brightness: Brightness.dark,
+        ).show(context);
+        return;
+      }
       var request = http.MultipartRequest('POST', uri);
       request.fields['id'] = widget.idHandover;
       request.fields['assign'] = '${cUser.data.namaUser}';
       request.fields['warehouse'] = '${cUser.data.warehouse}';
       var pic = await http.MultipartFile.fromPath("foto", _image!.path);
       request.files.add(pic);
+
       var pic2 =
-          await http.MultipartFile.fromPath("tandatangan", _image1!.path);
+          await http.MultipartFile.fromPath("tandatangan", dataRender!.path);
       request.files.add(pic2);
       var response = await request.send();
-
-      if (_image == null) {
-        AnimatedSnackBar.rectangle(
-          'Error',
-          'Gagal submit handover',
-          type: AnimatedSnackBarType.error,
-          brightness: Brightness.dark,
-        ).show(context);
-      } else {}
+      print(response.statusCode);
       if (response.statusCode == 200) {
         CoolAlert.show(
           context: context,
           type: CoolAlertType.success,
-          text: 'Berhasil handover',
-        );
-        Get.off(() => HandoverPage());
-        setState(() {});
+          text: 'Berhasil packing',
+        ).then((value) {
+          Get.off(() => HandoverPage());
+          cHandover.getList();
+          setState(() {});
+        });
       } else {
         CoolAlert.show(
           context: context,
@@ -107,9 +132,23 @@ class _ListHandoverState extends State<ListHandover> {
     }
   }
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/${DateTime.now()}.png');
+  }
+
+  File? dataRender = null;
+
   @override
   void initState() {
     cHandover.setData(widget.idHandover);
+    // _controller.addListener(() => print('Value changed'));
     super.initState();
   }
 
@@ -272,7 +311,7 @@ class _ListHandoverState extends State<ListHandover> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Foto Driver & Barang',
+                              'Tandatangan Driver',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -281,23 +320,64 @@ class _ListHandoverState extends State<ListHandover> {
                             const SizedBox(
                               height: 8,
                             ),
-                            _image1 != null
-                                ? Container(
+                            exportImage == null
+                                ? Signature(
+                                    controller: _controller,
                                     height: 200,
                                     width: 310,
-                                    child: Image.file(
-                                      _image1!,
-                                      fit: BoxFit.cover,
-                                    ))
-                                : TextButton(
+                                    backgroundColor: Colors.white,
+                                  )
+                                : Image.memory(
+                                    exportImage!,
+                                    height: 200,
+                                    width: 310,
+                                  ),
+                            Container(
+                              decoration:
+                                  const BoxDecoration(color: Colors.black),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  //SHOW EXPORTED IMAGE IN NEW ROUTE
+                                  IconButton(
+                                    icon: const Icon(Icons.image),
+                                    color: Colors.blue,
                                     onPressed: () async {
-                                      await getImage1();
+                                      exportImage =
+                                          await _controller.toPngBytes();
+                                      final signFile = await _localFile;
+                                      dataRender = await File(signFile.path)
+                                          .writeAsBytes(exportImage!.toList());
+                                      setState(() {});
                                     },
-                                    child: Icon(
-                                      Icons.camera_alt_outlined,
-                                      size: 32,
-                                      color: Colors.black,
-                                    )),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.undo),
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      setState(() => _controller.undo());
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.redo),
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      setState(() => _controller.redo());
+                                    },
+                                  ),
+                                  //CLEAR CANVAS
+                                  IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      setState(() => _controller.clear());
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ],

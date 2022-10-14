@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../config/app_color.dart';
 import '../config/session.dart';
 import '../controller/cUser.dart';
+import 'handover_page.dart';
 
 class DashboardPickerPage extends StatefulWidget {
   const DashboardPickerPage({Key? key}) : super(key: key);
@@ -144,35 +145,85 @@ class _DashboardPickerPageState extends State<DashboardPickerPage> {
                                   color: Colors.white70,
                                   child: InkWell(
                                     onTap: () {
-                                      Get.to(() => {});
+                                      Get.to(() => PickingPage());
                                     },
                                     splashColor: Colors.black54,
                                     child: SizedBox(
                                       width: 110,
                                       height: 110,
                                       child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundColor:
-                                                    AppColor.appSoftColor,
-                                                radius: 30,
-                                                child: Image.asset(
-                                                  "assets/images/picking-1.png",
-                                                  fit: BoxFit.cover,
-                                                ),
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  AppColor.appSoftColor,
+                                              radius: 30,
+                                              child: Image.asset(
+                                                "assets/images/picking-1.png",
+                                                fit: BoxFit.cover,
                                               ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                "Picking",
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "Picking",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
                                               ),
-                                            ],
-                                          )),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  elevation: 10,
+                                  shadowColor: Colors.black,
+                                  color: Colors.white70,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.to(() => HandoverPage());
+                                    },
+                                    splashColor: Colors.black54,
+                                    child: SizedBox(
+                                      width: 110,
+                                      height: 110,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  AppColor.appSoftColor,
+                                              radius: 30,
+                                              child: Image.asset(
+                                                "assets/images/handover_.png",
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              "Handover",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 )),

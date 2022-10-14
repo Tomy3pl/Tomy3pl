@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:crewdible_b2b/controller/cPickingList.dart';
 import 'package:crewdible_b2b/controller/cUser.dart';
+import 'package:crewdible_b2b/page/picking_page.dart';
 import 'package:d_info/d_info.dart';
 import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
@@ -12,6 +13,7 @@ import 'package:http/http.dart' as http;
 
 import '../config/app_color.dart';
 import '../model/mListItem.dart';
+import '../model/mListPickingItem.dart';
 
 class PickingProses extends StatefulWidget {
   PickingProses({Key? key, required this.idBasket}) : super(key: key);
@@ -35,6 +37,7 @@ class _PickingProsesState extends State<PickingProses> {
   @override
   void initState() {
     cPickingList.setData(widget.idBasket ?? '');
+    setState(() {});
     super.initState();
   }
 
@@ -60,12 +63,10 @@ class _PickingProsesState extends State<PickingProses> {
               children: [
                 DView.spaceHeight(10),
                 GetBuilder<CPickingList>(builder: (_) {
-                  if (cPickingList.data.idBasket == null)
-                    return DView.loadingBar();
-                  List list = jsonDecode(cPickingList.data.listItem!);
-
-                  if (list.isEmpty) return DView.loadingBar();
                   if (cPickingList.loading) return DView.loadingBar();
+                  if (cPickingList.list.isEmpty) return DView.empty();
+                  List<ListPickingItems> list = cPickingList.data.listItem!;
+
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -79,7 +80,8 @@ class _PickingProsesState extends State<PickingProses> {
                       );
                     },
                     itemBuilder: (context, index) {
-                      Map picking = list[index];
+                      ListPickingItems picking = list[index];
+                      if (picking.id == null) return DView.empty();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +96,7 @@ class _PickingProsesState extends State<PickingProses> {
                             color: Colors.white.withOpacity(0.9),
                             child: InkWell(
                               onTap: () {
-                                submite(picking['id']);
+                                submite(picking.id);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(19.0),
@@ -107,7 +109,7 @@ class _PickingProsesState extends State<PickingProses> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            picking['itemId'],
+                                            picking.itemId!,
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               fontSize: 16,
@@ -120,7 +122,7 @@ class _PickingProsesState extends State<PickingProses> {
                                           Container(
                                             width: 270,
                                             child: Text(
-                                              picking['itemDetail'],
+                                              picking.itemDetail!,
                                               textAlign: TextAlign.justify,
                                               style: TextStyle(
                                                 fontSize: 14,
@@ -132,7 +134,7 @@ class _PickingProsesState extends State<PickingProses> {
                                             height: 10,
                                           ),
                                           Text(
-                                            picking['qty'],
+                                            picking.qty!,
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               fontSize: 18,
@@ -140,13 +142,13 @@ class _PickingProsesState extends State<PickingProses> {
                                             ),
                                           ),
                                           Text(
-                                            picking['status'] == "1"
+                                            picking.status == "1"
                                                 ? 'Sudah dipick'
                                                 : 'Belum dipick',
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
-                                              color: picking['status'] == "1"
+                                              color: picking.status == "1"
                                                   ? AppColor.appPrimary
                                                   : AppColor.appRed,
                                             ),
@@ -226,9 +228,14 @@ class _PickingProsesState extends State<PickingProses> {
           text: 'Berhasil picking',
           barrierDismissible: false,
         ).then((value) {
-          Get.off(() => PickingProses(idBasket: widget.idBasket));
-          cPickingList.getList();
-          setState(() {});
+          if (cPickingList.data.listItem!.isEmpty) {
+            Get.offAll(PickingPage());
+            cPickingList.getList();
+            setState(() {});
+          } else {
+            cPickingList.setData(widget.idBasket ?? '');
+            setState(() {});
+          }
         });
       } else {
         CoolAlert.show(
