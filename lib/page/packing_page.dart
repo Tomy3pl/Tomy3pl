@@ -1,4 +1,5 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:crewdible_b2b/page/packing_proses.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _PackingPageState extends State<PackingPage> {
   final cPacking = Get.put(CPacking());
   final controllerSearch = TextEditingController();
   String _scanBarcode = 'unknown';
+  final audioPlayer = AudioPlayer();
 
   _LoadData() async {
     await Get.find<CPacking>().getList();
@@ -37,7 +39,6 @@ class _PackingPageState extends State<PackingPage> {
     _LoadData();
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -45,22 +46,16 @@ class _PackingPageState extends State<PackingPage> {
           'Packing Proses',
           style: TextStyle(fontSize: 18),
         ),
+        actions: [search()],
       ),
       body: Container(
         color: Colors.grey[200],
         child: Column(
           children: [
-            Container(
-              child: Row(
-                children: [
-                  search(),
-                ],
-              ),
-            ),
             Column(
               children: [
                 Container(
-                  height: 30,
+                  padding: EdgeInsets.symmetric(vertical: 20),
                   alignment: Alignment.topLeft,
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   child: const Text(
@@ -158,6 +153,8 @@ class _PackingPageState extends State<PackingPage> {
     if (barcodeScanRes == "-1") {
       return;
     }
+    await audioPlayer.setVolume(1.0);
+    await audioPlayer.play(AssetSource('notifacation.mp3'));
     Get.to(() => PackingProses(orderId: _scanBarcode));
 
     setState(() {
@@ -165,21 +162,15 @@ class _PackingPageState extends State<PackingPage> {
     });
   }
 
-  Expanded search() {
-    return Expanded(
-      child: Container(
-        height: 90,
-        padding: const EdgeInsets.all(16),
-        child: IconButton(
-          onPressed: () {
-            scanBarcodeNormal();
-          },
-          icon: const Icon(
-            Icons.search,
-            color: Colors.black,
-            size: 30,
-          ),
-        ),
+  IconButton search() {
+    return IconButton(
+      onPressed: () {
+        scanBarcodeNormal();
+      },
+      icon: const Icon(
+        Icons.qr_code_2,
+        color: Colors.black,
+        size: 30,
       ),
     );
   }

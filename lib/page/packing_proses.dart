@@ -232,7 +232,8 @@ class _PackingProsesState extends State<PackingProses> {
                           _image != null
                               ? Container(
                                   height: 200,
-                                  width: 310,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.79,
                                   child: Image.file(
                                     _image!,
                                     fit: BoxFit.cover,
@@ -281,7 +282,8 @@ class _PackingProsesState extends State<PackingProses> {
                           _image1 != null
                               ? Container(
                                   height: 200,
-                                  width: double.infinity,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.79,
                                   child: Image.file(
                                     _image1!,
                                     fit: BoxFit.cover,

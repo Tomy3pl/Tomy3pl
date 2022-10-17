@@ -61,16 +61,22 @@ class _ListHandoverState extends State<ListHandover> {
 
   Future getImage() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image = File(imageFile!.path);
     setState(() {});
   }
 
   Future getImage1() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imageFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxHeight: 1920,
+      maxWidth: 1080,
+    );
     _image1 = File(imageFile!.path);
     setState(() {});
   }
@@ -274,7 +280,8 @@ class _ListHandoverState extends State<ListHandover> {
                             _image != null
                                 ? Container(
                                     height: 200,
-                                    width: 310,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.79,
                                     child: Image.file(
                                       _image!,
                                       fit: BoxFit.cover,
@@ -324,13 +331,15 @@ class _ListHandoverState extends State<ListHandover> {
                                 ? Signature(
                                     controller: _controller,
                                     height: 200,
-                                    width: 310,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.79,
                                     backgroundColor: Colors.white,
                                   )
                                 : Image.memory(
                                     exportImage!,
                                     height: 200,
-                                    width: 310,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.79,
                                   ),
                             Container(
                               decoration:

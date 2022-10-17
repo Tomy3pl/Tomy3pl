@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:crewdible_b2b/controller/cPickingList.dart';
 import 'package:crewdible_b2b/controller/cUser.dart';
 import 'package:crewdible_b2b/model/mPickingList.dart';

@@ -238,7 +238,7 @@ class _PickingProsesState extends State<PickingProses> {
           if (cPickingList.data == null ||
               cPickingList.data!.listItem == null ||
               cPickingList.data!.listItem!.isEmpty) {
-            Get.offAll(() => PickingPage());
+            Get.off(() => PickingPage());
             setState(() {});
           } else {
             cPickingList.setData(widget.idBasket ?? '');
