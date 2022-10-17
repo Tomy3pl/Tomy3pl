@@ -23,7 +23,7 @@ class CPickingList extends GetxController {
   }
 
   final Rx<ListItem> _data = ListItem().obs;
-  ListItem get data => _data.value;
+  ListItem? get data => _data.value;
   setData(String idBasket) async {
     // loading = true;
     _data.value = await SourcePickingList.getWhereId(idBasket);

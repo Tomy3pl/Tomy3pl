@@ -24,6 +24,13 @@ class _PickingPageState extends State<PickingPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    cPicking.getList();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     _LoadData();
     return Scaffold(

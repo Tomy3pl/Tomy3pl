@@ -61,40 +61,42 @@ class _PackingProsesState extends State<PackingProses> {
     bool? yes = await DInfo.dialogConfirmation(
         context, 'Packing Product', 'Apakah proses packing sudah selesai ?');
     if (yes ?? false) {
-      final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiPacking/update");
-      var request = http.MultipartRequest('POST', uri);
-      request.fields['id'] = widget.orderId;
-      request.fields['assign'] = '${cUser.data.namaUser}';
-      var pic = await http.MultipartFile.fromPath("foto", _image!.path);
-      request.files.add(pic);
-      var pic2 = await http.MultipartFile.fromPath("fotoAfter", _image1!.path);
-      request.files.add(pic2);
-      var response = await request.send();
-
-      if (_image == null) {
+      if (_image == null && _image1 == null) {
         AnimatedSnackBar.rectangle(
-          'Error',
-          'Gagal submit packing',
+          'Gagal',
+          'Foto harus diisi semua',
           type: AnimatedSnackBarType.error,
           brightness: Brightness.dark,
         ).show(context);
-      } else {}
-      if (response.statusCode == 200) {
-        CoolAlert.show(
-          context: context,
-          type: CoolAlertType.success,
-          text: 'Berhasil packing',
-        ).then((value) {
-          Get.off(() => PackingPage());
-          setState(() {});
-        });
       } else {
-        CoolAlert.show(
-          context: context,
-          type: CoolAlertType.error,
-          text: 'Gagal packing',
-        );
+        final uri =
+            Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiPacking/update");
+        var request = http.MultipartRequest('POST', uri);
+        request.fields['id'] = widget.orderId;
+        request.fields['assign'] = '${cUser.data.namaUser}';
+        var pic = await http.MultipartFile.fromPath("foto", _image!.path);
+        request.files.add(pic);
+        var pic2 =
+            await http.MultipartFile.fromPath("fotoAfter", _image1!.path);
+        request.files.add(pic2);
+        var response = await request.send();
+
+        if (response.statusCode == 200) {
+          CoolAlert.show(
+            context: context,
+            type: CoolAlertType.success,
+            text: 'Berhasil packing',
+          ).then((value) {
+            Get.off(() => PackingPage());
+            setState(() {});
+          });
+        } else {
+          CoolAlert.show(
+            context: context,
+            type: CoolAlertType.error,
+            text: 'Gagal packing',
+          );
+        }
       }
     }
   }
@@ -279,7 +281,7 @@ class _PackingProsesState extends State<PackingProses> {
                           _image1 != null
                               ? Container(
                                   height: 200,
-                                  width: 310,
+                                  width: double.infinity,
                                   child: Image.file(
                                     _image1!,
                                     fit: BoxFit.cover,

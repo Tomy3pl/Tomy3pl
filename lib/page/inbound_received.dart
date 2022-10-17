@@ -330,7 +330,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           type: CoolAlertType.success,
           text: 'Berhasil Inbound',
         ).then((value) {
-          Get.off(() => InboundPage());
+          Get.offAll(() => InboundPage());
           cInbound.getList();
           setState(() {});
         });

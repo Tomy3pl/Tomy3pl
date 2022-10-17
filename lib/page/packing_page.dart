@@ -20,7 +20,7 @@ class PackingPage extends StatefulWidget {
 class _PackingPageState extends State<PackingPage> {
   final cPacking = Get.put(CPacking());
   final controllerSearch = TextEditingController();
-  String _scanBarcode = '';
+  String _scanBarcode = 'unknown';
 
   _LoadData() async {
     await Get.find<CPacking>().getList();
@@ -28,6 +28,7 @@ class _PackingPageState extends State<PackingPage> {
 
   @override
   void initState() {
+    setState(() {});
     super.initState();
   }
 
@@ -142,31 +143,22 @@ class _PackingPageState extends State<PackingPage> {
     );
   }
 
-  Future<void> scanQR() async {
+  Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
+      return;
     }
+    if (!mounted) return;
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      // ignore: use_build_context_synchronously
-      AnimatedSnackBar.rectangle(
-        'Order_id tidak ada',
-        'Gagal',
-        type: AnimatedSnackBarType.error,
-        brightness: Brightness.dark,
-      ).show(context);
-    } else {
-      Get.off(PackingProses(orderId: _scanBarcode));
+    if (barcodeScanRes == "-1") {
+      return;
     }
+    Get.to(() => PackingProses(orderId: _scanBarcode));
 
     setState(() {
       _scanBarcode = barcodeScanRes;
@@ -178,28 +170,14 @@ class _PackingPageState extends State<PackingPage> {
       child: Container(
         height: 90,
         padding: const EdgeInsets.all(16),
-        child: TextField(
-          controller: controllerSearch,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 26),
-            isDense: true,
-            filled: true,
-            fillColor: Colors.grey[300],
-            hintText: 'Search...',
-            suffixIcon: IconButton(
-              onPressed: () {
-                scanQR();
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-                size: 30,
-              ),
-            ),
+        child: IconButton(
+          onPressed: () {
+            scanBarcodeNormal();
+          },
+          icon: const Icon(
+            Icons.search,
+            color: Colors.black,
+            size: 30,
           ),
         ),
       ),

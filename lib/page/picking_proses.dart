@@ -37,6 +37,7 @@ class _PickingProsesState extends State<PickingProses> {
   @override
   void initState() {
     cPickingList.setData(widget.idBasket ?? '');
+    controllerQty.text = "0";
     setState(() {});
     super.initState();
   }
@@ -63,9 +64,15 @@ class _PickingProsesState extends State<PickingProses> {
               children: [
                 DView.spaceHeight(10),
                 GetBuilder<CPickingList>(builder: (_) {
+                  if (cPickingList.data == null) {
+                    print('${cPickingList.data} Ini data coba liat');
+                  } else {
+                    print('data tidak kosong');
+                  }
                   if (cPickingList.loading) return DView.loadingBar();
-                  if (cPickingList.list.isEmpty) return DView.empty();
-                  List<ListPickingItems> list = cPickingList.data.listItem!;
+                  if (cPickingList.data == null) return DView.empty();
+                  List<ListPickingItems> list =
+                      cPickingList.data!.listItem ?? [];
 
                   return ListView.separated(
                     shrinkWrap: true,
@@ -81,7 +88,7 @@ class _PickingProsesState extends State<PickingProses> {
                     },
                     itemBuilder: (context, index) {
                       ListPickingItems picking = list[index];
-                      if (picking.id == null) return DView.empty();
+                      if (list.isEmpty) return DView.empty();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,13 +235,24 @@ class _PickingProsesState extends State<PickingProses> {
           text: 'Berhasil picking',
           barrierDismissible: false,
         ).then((value) {
-          if (cPickingList.data.listItem!.isEmpty) {
-            Get.offAll(PickingPage());
-            cPickingList.getList();
+          if (cPickingList.data == null ||
+              cPickingList.data!.listItem == null ||
+              cPickingList.data!.listItem!.isEmpty) {
+            Get.offAll(() => PickingPage());
             setState(() {});
           } else {
             cPickingList.setData(widget.idBasket ?? '');
-            setState(() {});
+            controllerQty.text = '';
+            if (cPickingList.data == null ||
+                cPickingList.data!.listItem == null ||
+                cPickingList.data!.listItem!.isEmpty ||
+                cPickingList.data!.listItem!.length < 2) {
+              print('dataharusnya kosong');
+              Get.off(() => PickingPage());
+            } else {
+              print('cek picking list ${cPickingList.data!.listItem!.length}');
+              setState(() {});
+            }
           }
         });
       } else {

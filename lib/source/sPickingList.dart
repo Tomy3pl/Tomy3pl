@@ -32,7 +32,9 @@ class SourcePickingList {
     String? responseBody = await AppRequest.post(url, {'id': idBasket});
     if (responseBody != null) {
       Map result = jsonDecode(responseBody);
-      if (result['success']) {
+      bool resultSuccess = result['success'] ?? false;
+      print(resultSuccess);
+      if (resultSuccess) {
         return ListItem.fromJson(result['data']);
       }
       return ListItem();
