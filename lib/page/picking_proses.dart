@@ -37,7 +37,7 @@ class _PickingProsesState extends State<PickingProses> {
   @override
   void initState() {
     cPickingList.setData(widget.idBasket ?? '');
-    controllerQty.text = "0";
+    controllerQty.text = " ";
     setState(() {});
     super.initState();
   }

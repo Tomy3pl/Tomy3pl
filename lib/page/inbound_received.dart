@@ -54,8 +54,8 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 1920,
-      maxWidth: 1080,
+      maxHeight: 720,
+      maxWidth: 1280,
     );
     _image = File(imageFile!.path);
     setState(() {});
@@ -65,8 +65,8 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 1920,
-      maxWidth: 1080,
+      maxHeight: 720,
+      maxWidth: 1280,
     );
     _image1 = File(imageFile!.path);
     setState(() {});

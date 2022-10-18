@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:crewdible_b2b/model/mHandover.dart';
+import 'package:get/get.dart';
 
 import '../config/api_config.dart';
 import '../config/api_request.dart';
+import '../controller/cUser.dart';
 
 class SourceHandover {
   static Future<List<Handover>> gets() async {
-    String url = '${ApiConfig.manifest}';
+    final cUser = Get.put(CUser());
+    String url = '${ApiConfig.manifest}/detail/${cUser.data.warehouse}';
     String? responseBody = await AppRequest.gets(url);
     if (responseBody != null) {
       Map result = jsonDecode(responseBody);

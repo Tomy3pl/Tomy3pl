@@ -176,7 +176,8 @@ class _DashboardPageState extends State<DashboardPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                    width: 80,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.79,
                                     height: 80,
                                     // color: Colors.amber,
                                     child: InkWell(

@@ -18,7 +18,8 @@ class SourcePacking {
   // }
 
   static Future<List<Packing>> gets() async {
-    String url = '${ApiConfig.packing}';
+    final cUser = Get.put(CUser());
+    String url = '${ApiConfig.packing}/detail/${cUser.data.warehouse}';
     String? responseBody = await AppRequest.gets(url);
     if (responseBody != null) {
       Map result = jsonDecode(responseBody);

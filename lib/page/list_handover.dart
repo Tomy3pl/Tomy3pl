@@ -63,8 +63,8 @@ class _ListHandoverState extends State<ListHandover> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 1920,
-      maxWidth: 1080,
+      maxHeight: 720,
+      maxWidth: 1280,
     );
     _image = File(imageFile!.path);
     setState(() {});
@@ -74,8 +74,8 @@ class _ListHandoverState extends State<ListHandover> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 1920,
-      maxWidth: 1080,
+      maxHeight: 720,
+      maxWidth: 1280,
     );
     _image1 = File(imageFile!.path);
     setState(() {});
@@ -84,8 +84,6 @@ class _ListHandoverState extends State<ListHandover> {
   Future submite() async {
     bool? yes = await DInfo.dialogConfirmation(
         context, 'HandOver', 'Apakah proses handover sudah selesai ?');
-    final uri =
-        Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiManifest/update");
 
     if (yes ?? false) {
       if (_image == null) {
@@ -106,6 +104,8 @@ class _ListHandoverState extends State<ListHandover> {
         ).show(context);
         return;
       }
+      final uri =
+          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiManifest/update");
       var request = http.MultipartRequest('POST', uri);
       request.fields['id'] = widget.idHandover;
       request.fields['assign'] = '${cUser.data.namaUser}';
