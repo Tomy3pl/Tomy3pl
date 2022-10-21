@@ -63,8 +63,8 @@ class _ListHandoverState extends State<ListHandover> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 336,
+      maxWidth: 448,
     );
     _image = File(imageFile!.path);
     setState(() {});
@@ -74,8 +74,8 @@ class _ListHandoverState extends State<ListHandover> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 336,
+      maxWidth: 448,
     );
     _image1 = File(imageFile!.path);
     setState(() {});

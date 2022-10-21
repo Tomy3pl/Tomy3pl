@@ -39,8 +39,8 @@ class _PackingProsesState extends State<PackingProses> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 336,
+      maxWidth: 448,
     );
     _image = File(imageFile!.path);
     setState(() {});
@@ -50,8 +50,8 @@ class _PackingProsesState extends State<PackingProses> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 336,
+      maxWidth: 448,
     );
     _image1 = File(imageFile!.path);
     setState(() {});
@@ -59,7 +59,7 @@ class _PackingProsesState extends State<PackingProses> {
 
   Future submite() async {
     bool? yes = await DInfo.dialogConfirmation(
-        context, 'Packing Product', 'Apakah proses packing sudah selesai ?');
+        context, 'Handover', 'Apakah proses Handover sudah selesai ?');
     if (yes ?? false) {
       if (_image == null && _image1 == null) {
         AnimatedSnackBar.rectangle(
@@ -85,7 +85,7 @@ class _PackingProsesState extends State<PackingProses> {
           CoolAlert.show(
             context: context,
             type: CoolAlertType.success,
-            text: 'Berhasil packing',
+            text: 'Berhasil Handover',
           ).then((value) {
             Get.off(() => PackingPage());
             setState(() {});
@@ -94,7 +94,7 @@ class _PackingProsesState extends State<PackingProses> {
           CoolAlert.show(
             context: context,
             type: CoolAlertType.error,
-            text: 'Gagal packing',
+            text: 'Gagal Handover',
           );
         }
       }

@@ -54,8 +54,8 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 640,
+      maxWidth: 480,
     );
     _image = File(imageFile!.path);
     setState(() {});
@@ -65,8 +65,8 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile = await _picker.pickImage(
       source: ImageSource.camera,
-      maxHeight: 720,
-      maxWidth: 1280,
+      maxHeight: 640,
+      maxWidth: 480,
     );
     _image1 = File(imageFile!.path);
     setState(() {});
@@ -89,6 +89,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
 
   @override
   void dispose() {
+    controllerTglDatang.dispose();
     controllerDriver.dispose();
     controllerPo.dispose();
     controllerPlatNo.dispose();
@@ -310,13 +311,15 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
     );
     bool loadingData = false;
     if (yes ?? false) {
+      DateFormat df = new DateFormat('yyyy-M-d H:mm:dd');
+      DateTime date = df.parse(controllerTglDatang.text);
       final uri =
           Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiInbound/updatePo");
       var request = http.MultipartRequest('POST', uri);
       request.fields['nopo'] = widget.nopo ?? '';
       request.fields['noplat'] = controllerPlatNo.text;
       request.fields['driver'] = controllerDriver.text;
-      request.fields['date'] = controllerTglDatang.text;
+      request.fields['date'] = date.toIso8601String();
 
       var pic = await http.MultipartFile.fromPath("foto1", _image!.path);
       request.files.add(pic);
@@ -330,7 +333,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
           type: CoolAlertType.success,
           text: 'Berhasil Inbound',
         ).then((value) {
-          Get.offAll(() => InboundPage());
+          Get.off(() => InboundPage());
           cInbound.getList();
           setState(() {});
         });

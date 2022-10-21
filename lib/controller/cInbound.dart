@@ -56,8 +56,10 @@ class CInbound extends GetxController {
         items[i].selected = isSelected;
         if (isSelected) {
           items[i].qtyGet = items[i].qty ?? '0';
+          items[i].status = '1';
         } else {
           items[i].qtyGet = '0';
+          items[i].status = '0';
         }
         print(items[i].selected);
         break;

@@ -70,9 +70,11 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
                 var request = http.MultipartRequest('POST', uri);
                 request.fields['id'] = element.id;
                 request.fields['quantity'] = element.qtyGet;
+                request.fields['status'] = element.status;
                 var response = await request.send();
                 print(response);
-                print("${response.statusCode} ${element.id} ${element.qtyGet}");
+                print(
+                    "${response.statusCode} ${element.id} ${element.qtyGet} ${element.status}");
               });
               await Future.delayed(const Duration(seconds: 5));
               Get.off(() => InboundReceivedPage(nopo: widget.nopo));
@@ -230,31 +232,32 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
       barrierDismissible: false,
     );
 
-    if (yes ?? false) {
-      final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiInbound/update");
-      var request = http.MultipartRequest('POST', uri);
-      request.fields['id'] = id;
-      request.fields['quantity'] = controllerQty.text;
+    // if (yes ?? false) {
+    //   final uri =
+    //       Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiInbound/update");
+    //   var request = http.MultipartRequest('POST', uri);
+    //   request.fields['id'] = id;
+    //   request.fields['quantity'] = controllerQty.text;
+    //   request.fields['status'] = '1';
 
-      var response = await request.send();
+    //   var response = await request.send();
 
-      if (response.statusCode == 200) {
-        CoolAlert.show(
-          context: context,
-          type: CoolAlertType.success,
-          text: 'Berhasil',
-        ).then((value) {
-          Get.off(ReceiveInboundPage(nopo: '${widget.nopo}'));
-          setState(() {});
-        });
-      } else {
-        CoolAlert.show(
-          context: context,
-          type: CoolAlertType.error,
-          text: 'Gagal',
-        );
-      }
-    }
+    //   if (response.statusCode == 200) {
+    //     CoolAlert.show(
+    //       context: context,
+    //       type: CoolAlertType.success,
+    //       text: 'Berhasil',
+    //     ).then((value) {
+    //       Get.off(ReceiveInboundPage(nopo: '${widget.nopo}'));
+    //       setState(() {});
+    //     });
+    //   } else {
+    //     CoolAlert.show(
+    //       context: context,
+    //       type: CoolAlertType.error,
+    //       text: 'Gagal',
+    //     );
+    //   }
+    // }
   }
 }

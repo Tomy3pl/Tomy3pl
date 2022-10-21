@@ -13,7 +13,7 @@ class SourcePickingList {
   static Future<List<ListBasket>> gets() async {
     var cUser2 = Get.put(CUser());
     String url = '${ApiConfig.pickingList}/show/${cUser2.data.namaUser}';
-    String? responseBody = await AppRequest.gets(url);
+    String? responseBody = await AppRequest.post(url, {});
     if (responseBody != null) {
       Map result = jsonDecode(responseBody);
       if (result['success']) {

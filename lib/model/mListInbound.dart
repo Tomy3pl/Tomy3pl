@@ -7,6 +7,7 @@ class ListDetailItem {
     this.statusItem,
     required this.selected,
     required this.qtyGet,
+    required this.status,
   });
 
   String id;
@@ -16,6 +17,7 @@ class ListDetailItem {
   String? statusItem;
   bool selected;
   String qtyGet;
+  String status;
 
   factory ListDetailItem.fromJson(Map<String, dynamic> json) => ListDetailItem(
         id: json["id"],
@@ -25,6 +27,7 @@ class ListDetailItem {
         statusItem: json["statusItem"],
         selected: false,
         qtyGet: "0",
+        status: "0",
       );
 
   Map<String, dynamic> toJson() => {
