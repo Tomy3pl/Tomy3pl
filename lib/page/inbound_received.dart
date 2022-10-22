@@ -75,10 +75,6 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
   @override
   void initState() {
     super.initState();
-    // ListInbound list = cInbound.list[index];
-    // DateTime dateToday = new DateTime.now();
-    // ConnectionState.waiting =
-    // String date = DateFormat().add_yMd().add_jms().format(now); // 2021-06-24
     String date = DateFormat("yyyy-M-d H:mm:dd").format(now); // 2021-06-24
     cInbound.setData(widget.nopo ?? '');
     controllerPo.text = cInbound.data.nopo ?? '';

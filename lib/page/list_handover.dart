@@ -83,7 +83,7 @@ class _ListHandoverState extends State<ListHandover> {
 
   Future submite() async {
     bool? yes = await DInfo.dialogConfirmation(
-        context, 'HandOver', 'Apakah proses handover sudah selesai ?');
+        context, 'Handover', 'Apakah proses handover sudah selesai ?');
 
     if (yes ?? false) {
       if (_image == null) {
@@ -122,7 +122,7 @@ class _ListHandoverState extends State<ListHandover> {
         CoolAlert.show(
           context: context,
           type: CoolAlertType.success,
-          text: 'Berhasil packing',
+          text: 'Berhasil Handover',
         ).then((value) {
           Get.off(() => HandoverPage());
           cHandover.getList();

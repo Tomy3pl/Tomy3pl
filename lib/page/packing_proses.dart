@@ -59,7 +59,7 @@ class _PackingProsesState extends State<PackingProses> {
 
   Future submite() async {
     bool? yes = await DInfo.dialogConfirmation(
-        context, 'Handover', 'Apakah proses Handover sudah selesai ?');
+        context, 'Packing', 'Apakah proses Packing sudah selesai ?');
     if (yes ?? false) {
       if (_image == null && _image1 == null) {
         AnimatedSnackBar.rectangle(
@@ -85,7 +85,7 @@ class _PackingProsesState extends State<PackingProses> {
           CoolAlert.show(
             context: context,
             type: CoolAlertType.success,
-            text: 'Berhasil Handover',
+            text: 'Berhasil Packing',
           ).then((value) {
             Get.off(() => PackingPage());
             setState(() {});
@@ -94,7 +94,7 @@ class _PackingProsesState extends State<PackingProses> {
           CoolAlert.show(
             context: context,
             type: CoolAlertType.error,
-            text: 'Gagal Handover',
+            text: 'Gagal Packing',
           );
         }
       }
