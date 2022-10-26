@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:crewdible_b2b/model/mListPacking.dart';
+
 class Packing {
   Packing({
     this.orderId,
@@ -11,7 +15,7 @@ class Packing {
   });
 
   String? orderId;
-  String? list;
+  List<ListPacking>? list;
   String? foto;
   String? fotoAfter;
   String? assign;
@@ -19,16 +23,26 @@ class Packing {
   String? createdAt;
   String? updatedAt;
 
-  factory Packing.fromJson(Map<String, dynamic> json) => Packing(
-        orderId: json["order_id"],
-        list: json["list"],
-        foto: json["foto"],
-        fotoAfter: json["foto_after"],
-        assign: json["assign"],
-        status: json["Status"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-      );
+  factory Packing.fromJson(Map<String, dynamic> json) {
+    Packing result = Packing();
+    result.orderId = json["order_id"];
+    result.foto = json["foto"];
+    result.fotoAfter = json["foto_after"];
+    result.assign = json["assign"];
+    result.status = json["Status"];
+    result.createdAt = json["created_at"];
+    result.updatedAt = json["updated_at"];
+    try {
+      List tempItem = jsonDecode(json['list']);
+      List<ListPacking> list = [];
+      tempItem.forEach((e) => list.add(ListPacking.fromJson(e)));
+      result.list = list;
+    } catch (e) {
+      result.list = [];
+      print(e);
+    }
+    return result;
+  }
 
   Map<String, dynamic> toJson() => {
         "order_id": orderId,

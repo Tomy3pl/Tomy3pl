@@ -1,10 +1,14 @@
 import 'package:crewdible_b2b/config/app_color.dart';
 import 'package:crewdible_b2b/controller/cHandover.dart';
+import 'package:crewdible_b2b/controller/cUser.dart';
 import 'package:crewdible_b2b/model/mHandover.dart';
 import 'package:crewdible_b2b/page/list_handover.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'dashboard_packer_page.dart';
+import 'dashboard_picker_page.dart';
 
 class HandoverPage extends StatefulWidget {
   HandoverPage({Key? key}) : super(key: key);
@@ -15,6 +19,7 @@ class HandoverPage extends StatefulWidget {
 
 class _HandoverPageState extends State<HandoverPage> {
   final cHandover = Get.put(CHandover());
+  final cUser = Get.put(CUser());
   final controllerSearch = TextEditingController();
 
   _LoadData() async {
@@ -26,13 +31,20 @@ class _HandoverPageState extends State<HandoverPage> {
     _LoadData();
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           'Handover Proses',
           style: TextStyle(fontSize: 18),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            cUser.data.level == 'picker'
+                ? Get.off(DashboardPickerPage())
+                : Get.off(PackerDashboard());
+          },
         ),
       ),
       body: Container(

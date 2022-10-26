@@ -1,4 +1,5 @@
 import 'package:crewdible_b2b/controller/cInbound.dart';
+import 'package:crewdible_b2b/controller/cUser.dart';
 import 'package:crewdible_b2b/page/receive_inbound_page.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:get/get.dart';
 
 import '../config/app_color.dart';
 import '../model/mInbound.dart';
+import 'dashboard_packer_page.dart';
+import 'dashboard_picker_page.dart';
 
 class InboundPage extends StatefulWidget {
   InboundPage({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class InboundPage extends StatefulWidget {
 
 class _InboundPageState extends State<InboundPage> {
   final cInbound = Get.put(CInbound());
+  final cUser = Get.put(CUser());
   final controllerSearch = TextEditingController();
 
   @override
@@ -28,13 +32,20 @@ class _InboundPageState extends State<InboundPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
           'Inbound Proses',
           style: TextStyle(fontSize: 18),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            cUser.data.level == 'picker'
+                ? Get.off(DashboardPickerPage())
+                : Get.off(PackerDashboard());
+          },
         ),
       ),
       body: Container(

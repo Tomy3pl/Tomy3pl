@@ -1,6 +1,10 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:crewdible_b2b/controller/cUser.dart';
+import 'package:crewdible_b2b/model/mListPacking.dart';
+import 'package:crewdible_b2b/page/dashboard_picker_page.dart';
 import 'package:crewdible_b2b/page/packing_proses.dart';
+import 'package:crewdible_b2b/page/packing_proses_after.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +14,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../config/app_color.dart';
 import '../controller/cPacking.dart';
 import '../model/mPacking.dart';
+import 'dashboard_packer_page.dart';
 
 class PackingPage extends StatefulWidget {
   PackingPage({Key? key}) : super(key: key);
@@ -20,6 +25,7 @@ class PackingPage extends StatefulWidget {
 
 class _PackingPageState extends State<PackingPage> {
   final cPacking = Get.put(CPacking());
+  final cUser = Get.put(CUser());
   final controllerSearch = TextEditingController();
   String _scanBarcode = 'unknown';
   final audioPlayer = AudioPlayer();
@@ -30,6 +36,7 @@ class _PackingPageState extends State<PackingPage> {
 
   @override
   void initState() {
+    cPacking.getList();
     setState(() {});
     super.initState();
   }
@@ -45,6 +52,15 @@ class _PackingPageState extends State<PackingPage> {
         title: Text(
           'Packing Proses',
           style: TextStyle(fontSize: 18),
+        ),
+        automaticallyImplyLeading: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            cUser.data.level == 'picker'
+                ? Get.off(DashboardPickerPage())
+                : Get.off(PackerDashboard());
+          },
         ),
         actions: [search()],
       ),
@@ -85,6 +101,8 @@ class _PackingPageState extends State<PackingPage> {
                   },
                   itemBuilder: (context, index) {
                     Packing packing = cPacking.list[index];
+                    // List<ListPacking> listPack = cPacking.data.list!;
+                    // ListPacking packingList = listPack[index];
                     return Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Container(
@@ -104,6 +122,14 @@ class _PackingPageState extends State<PackingPage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Text(
+                                    //   packingList.dropName ?? '--',
+                                    //   textAlign: TextAlign.left,
+                                    //   style: TextStyle(
+                                    //     fontSize: 16,
+                                    //     fontWeight: FontWeight.w800,
+                                    //   ),
+                                    // ),
                                     Text(
                                       packing.orderId ?? '',
                                       textAlign: TextAlign.left,
@@ -112,13 +138,31 @@ class _PackingPageState extends State<PackingPage> {
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
+                                    Text(
+                                      packing.status == '1'
+                                          ? 'Sudah ada foto before'
+                                          : 'Belum ada foto before',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800,
+                                        color: packing.status == '1'
+                                            ? AppColor.appPrimary
+                                            : AppColor.appRed,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    Get.off(() => PackingProses(
-                                          orderId: packing.orderId ?? '',
-                                        ));
+                                    Get.to(
+                                      () => packing.status == '0'
+                                          ? PackingProses(
+                                              orderId: packing.orderId ?? '',
+                                            )
+                                          : PackingAfter(
+                                              orderId: packing.orderId ?? ''),
+                                    );
                                   },
                                   icon: Icon(Icons.add_shopping_cart_rounded),
                                 )

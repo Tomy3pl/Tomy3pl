@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../config/app_color.dart';
+import 'dashboard_packer_page.dart';
+import 'dashboard_picker_page.dart';
 
 class PickingPage extends StatefulWidget {
   PickingPage({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class PickingPage extends StatefulWidget {
 
 class _PickingPageState extends State<PickingPage> {
   final cPicking = Get.put(CPickingList());
+  final cUser = Get.put(CUser());
   final controllerSearch = TextEditingController();
 
   _LoadData() async {
@@ -36,13 +39,20 @@ class _PickingPageState extends State<PickingPage> {
     _LoadData();
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           'Picking Proses',
           style: TextStyle(fontSize: 18),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            cUser.data.level == 'picker'
+                ? Get.off(DashboardPickerPage())
+                : Get.off(PackerDashboard());
+          },
         ),
       ),
       body: Container(
