@@ -244,8 +244,8 @@ class _PackingProsesState extends State<PackingProses> {
           brightness: Brightness.dark,
         ).show(context);
       } else {
-        final uri = Uri.parse(
-            "https://wms-b2b.dev.crewdible.co.id/ApiPacking/updateFoto");
+        final uri =
+            Uri.parse("https://wms-b2b.crewdible.com/ApiPacking/updateFoto");
         var request = http.MultipartRequest('POST', uri);
         request.fields['id'] = widget.orderId;
         var pic = await http.MultipartFile.fromPath("foto", _image!.path);

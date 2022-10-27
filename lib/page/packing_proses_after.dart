@@ -72,7 +72,7 @@ class _PackingAfterState extends State<PackingAfter> {
         ).show(context);
       } else {
         final uri =
-            Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiPacking/update");
+            Uri.parse("https://wms-b2b.crewdible.com/ApiPacking/update");
         var request = http.MultipartRequest('POST', uri);
         request.fields['id'] = widget.orderId;
         request.fields['assign'] = '${cUser.data.namaUser}';

@@ -310,7 +310,7 @@ class _InboundReceivedPageState extends State<InboundReceivedPage> {
       DateFormat df = new DateFormat('yyyy-M-d H:mm:dd');
       DateTime date = df.parse(controllerTglDatang.text);
       final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiInbound/updatePo");
+          Uri.parse("https://wms-b2b.crewdible.com/ApiInbound/updatePo");
       var request = http.MultipartRequest('POST', uri);
       request.fields['nopo'] = widget.nopo ?? '';
       request.fields['noplat'] = controllerPlatNo.text;

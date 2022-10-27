@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 class SourceUser {
   static Future<bool> login(String email, String password) async {
     var response = await http.post(
-      Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiKaryawan"),
+      Uri.parse("https://wms-b2b.crewdible.com/ApiKaryawan"),
       body: ({
         "email": email,
         "password": password,

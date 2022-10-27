@@ -104,8 +104,7 @@ class _ListHandoverState extends State<ListHandover> {
         ).show(context);
         return;
       }
-      final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiManifest/update");
+      final uri = Uri.parse("https://wms-b2b.crewdible.com/ApiManifest/update");
       var request = http.MultipartRequest('POST', uri);
       request.fields['id'] = widget.idHandover;
       request.fields['assign'] = '${cUser.data.namaUser}';

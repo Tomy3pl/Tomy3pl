@@ -66,7 +66,7 @@ class _ReceiveInboundPageState extends State<ReceiveInboundPage> {
               setState(() => loadingData = true);
               cInbound.inboundDetail?.listItem?.forEach((element) async {
                 final uri = Uri.parse(
-                    "https://wms-b2b.dev.crewdible.co.id/ApiInbound/update");
+                    "https://wms-b2b.crewdible.com/ApiInbound/update");
                 var request = http.MultipartRequest('POST', uri);
                 request.fields['id'] = element.id;
                 request.fields['quantity'] = element.qtyGet;

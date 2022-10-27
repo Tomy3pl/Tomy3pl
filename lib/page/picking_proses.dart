@@ -219,8 +219,7 @@ class _PickingProsesState extends State<PickingProses> {
     );
 
     if (yes ?? false) {
-      final uri =
-          Uri.parse("https://wms-b2b.dev.crewdible.co.id/ApiPicking/update");
+      final uri = Uri.parse("https://wms-b2b.crewdible.com/ApiPicking/update");
       var request = http.MultipartRequest('POST', uri);
       request.fields['id'] = picking;
       request.fields['quantity'] = controllerQty.text;
