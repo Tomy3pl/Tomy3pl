@@ -32,7 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
     if (yes ?? false) {
       Session.clearUser();
-      Get.off(() => const LoginPage());
+      Get.offAll(() => const LoginPage());
     }
   }
 

@@ -31,7 +31,7 @@ class _DashboardPickerPageState extends State<DashboardPickerPage> {
     );
     if (yes ?? false) {
       Session.clearUser();
-      Get.off(() => const LoginPage());
+      Get.offAll(() => const LoginPage());
     }
   }
 

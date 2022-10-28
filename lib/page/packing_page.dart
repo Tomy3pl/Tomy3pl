@@ -62,7 +62,7 @@ class _PackingPageState extends State<PackingPage> {
                 : Get.off(PackerDashboard());
           },
         ),
-        actions: [search()],
+        actions: [search(status: cPacking.data.status)],
       ),
       body: Container(
         color: Colors.grey[200],
@@ -182,7 +182,7 @@ class _PackingPageState extends State<PackingPage> {
     );
   }
 
-  Future<void> scanBarcodeNormal() async {
+  Future<void> scanBarcodeNormal(String? status) async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -199,17 +199,23 @@ class _PackingPageState extends State<PackingPage> {
     }
     await audioPlayer.setVolume(1.0);
     await audioPlayer.play(AssetSource('notifacation.mp3'));
-    Get.to(() => PackingProses(orderId: _scanBarcode));
+    Get.to(
+      () => status == '0'
+          ? PackingProses(
+              orderId: _scanBarcode,
+            )
+          : PackingAfter(orderId: _scanBarcode),
+    );
 
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
   }
 
-  IconButton search() {
+  IconButton search({String? status}) {
     return IconButton(
       onPressed: () {
-        scanBarcodeNormal();
+        scanBarcodeNormal(status);
       },
       icon: const Icon(
         Icons.qr_code_2,

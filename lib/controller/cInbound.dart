@@ -67,6 +67,8 @@ class CInbound extends GetxController {
     }
   }
 
+  void checkAll(bool? value) {}
+
   void uploadData() async {
     isLoading.value = true;
     await Future.delayed(Duration(seconds: 4));
